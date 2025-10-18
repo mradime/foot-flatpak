@@ -78,10 +78,10 @@ modules:
       - -Drun-shaping=enabled
       # Configure SVG support using bundled nanosvg
       - -Dsvg-backend=nanosvg
-      - -Dsystem-nanosvg=false
+      - -Dsystem-nanosvg=disabled
       # Disable unnecessary features
-      - -Dexamples=false
-      - -Ddocs=false
+      - -Dexamples=disabled
+      - -Ddocs=disabled
     # Explicitly clean up files installed by fcft that are not needed at runtime.
     # Note: Does NOT remove the essential libfcft.so library file.
     cleanup:
