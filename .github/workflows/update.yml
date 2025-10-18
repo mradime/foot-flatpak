@@ -23,8 +23,8 @@ jobs:
         run: |
           REPO="https://codeberg.org/dnkl/foot.git"
           REG="^v?(\d+\.\d+\.\d+)$"
-          VERSION=$(git ls-remote --tags --sort="-version:refname" $REPO | grep -v '{}$' | awk -F '/' '{print $3}' | grep -E $REG | head -n 1)
-          echo "Latest Chrome Version Found: $VERSION"
+          VERSION=$(git ls-remote --tags --sort="-version:refname" $REPO | grep -v '{}$' | awk -F '/' '{print $3}' | grep -P $REG | head -n 1)
+          echo "Latest foot version found: $VERSION"
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
 
       - name: "Check For Version Tag"
