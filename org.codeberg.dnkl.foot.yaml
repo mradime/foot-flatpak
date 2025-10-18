@@ -80,7 +80,7 @@ modules:
       - -Dsvg-backend=nanosvg
       - -Dsystem-nanosvg=disabled
       # Disable unnecessary features
-      - -Dexamples=disabled
+      - -Dexamples=false
       - -Ddocs=disabled
     # Explicitly clean up files installed by fcft that are not needed at runtime.
     # Note: Does NOT remove the essential libfcft.so library file.
