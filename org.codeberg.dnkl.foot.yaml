@@ -127,8 +127,8 @@ modules:
       - -Dtests=false
       - -Dutmp-backend=none
       # Explicitly enable desired features (some might be default)
-      - -Dthemes=enabled
-      - -Dime=enabled
+      - -Dthemes=true
+      - -Dime=true
       - -Dgrapheme-clustering=enabled
       - -Dterminfo=enabled
     cleanup:
