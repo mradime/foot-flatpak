@@ -35,23 +35,6 @@ finish-args:
   - --filesystem=xdg-run/pipewire-0
   - --socket=pulseaudio
 
-# Cleanup for a minimal package
-cleanup:
-  # Standard cleanup
-  - /include
-  - /lib/pkgconfig
-  - /share/doc
-  - /share/pkgconfig
-  - /share/aclocal
-  - /man # Already disabled via meson, but good cleanup
-  - /share/man # Already disabled via meson, but good cleanup
-  - '*.la'
-  - '*.a'
-  # Remove shell completion directories
-  - /share/bash-completion
-  - /share/zsh
-  - /share/fish/vendor_completions.d
-
 modules:
   # 1. Core library dependency for foot/fcft
   - name: tllist
@@ -69,7 +52,27 @@ modules:
           type: git
           tag-pattern: ^v?(\d+\.\d+\.\d+)$
 
-  # 2. Font library dependency for foot
+  # 2. libutf8proc
+  - name: libutf8proc
+    buildsystem: cmake
+    cleanup:
+      - /include
+      - /lib/cmake
+      - /lib/pkgconfig
+      - /lib/*.a
+      # - /lib/*.so # Remove shared library if only static is needed by fcft/foot,
+                   # but often safer to keep the .so if unsure. Let's keep it for now.
+      - /share/doc
+    sources:
+      - type: git
+        url: https://github.com/JuliaStrings/utf8proc.git
+        tag: v2.9.0
+        commit: 34db3f7954e9298e89f42641ac78e0450f80a70d
+        x-checker-data:
+          type: git
+          pattern: ^v(\d+\.\d+\.\d+)$
+
+  # 3. Font library dependency for foot
   - name: fcft
     buildsystem: meson
     config-opts:
@@ -98,7 +101,7 @@ modules:
           type: git
           tag-pattern: ^v?(\d+\.\d+\.\d+)$
 
-  # 3. The main foot application
+  # 4. The main foot application
   # What does foot's meson.build install?
   # 1. Executables -> Needed
   # 2. Desktop integration files (desktop files & icons) -> Needed
@@ -147,7 +150,7 @@ modules:
           tag-pattern: ^v?(\d+\.\d+\.\d+)$
           is-main-source: true
 
-  # 4. Default config
+  # 5. Default config
   - name: foot-config
     buildsystem: simple
     build-commands:
