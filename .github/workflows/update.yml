@@ -100,28 +100,6 @@ jobs:
           git -C flatpak lfs install
           git -C flatpak lfs track "**/objects/**"
 
-      - name: "Update Flatpak Tools & Ensure PATH"
-        run: |
-          # Update flatpak itself first
-          flatpak update --appstream -y
-          flatpak update -y # Update runtime/apps including potentially flatpak itself
-
-          # Install the latest Builder from Flathub
-          flatpak install flathub org.flatpak.Builder -y
-
-          # Find the path to the newly installed builder
-          FLATPAK_BUILDER_PATH=$(flatpak info --location org.flatpak.Builder)/export/bin/flatpak-builder
-          echo "Using flatpak-builder at: $FLATPAK_BUILDER_PATH"
-
-          # Prepend the Builder's bin directory to the PATH for subsequent steps
-          echo "$(dirname $FLATPAK_BUILDER_PATH)" >> $GITHUB_PATH
-
-          # Verify versions
-          echo "Flatpak version:"
-          flatpak --version
-          echo "Flatpak-builder version:"
-          $FLATPAK_BUILDER_PATH --version # Call the specific builder path
-
       - name: "Build Flatpak"
         env:
           GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}

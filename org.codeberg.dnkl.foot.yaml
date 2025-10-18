@@ -15,7 +15,7 @@ finish-args:
   # Server/Client Communication Socket
   # Needed for footd to create its socket in /run/user/<uid>
   # and for footclient to connect to it.
-  - --filesystem=xdg-run
+  - --filesystem=/run/user
   # The "Escape Hatch" to the Host Shell
   # Allows foot to call flatpak-spawn, which pops a portal dialog
   # asking the user for permission to run a host command.
