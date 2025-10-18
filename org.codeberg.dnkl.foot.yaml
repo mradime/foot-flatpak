@@ -57,8 +57,12 @@ modules:
     buildsystem: simple
     build-commands:
       - make
-      # Use prefix=/usr so files go into /app/lib, /app/include correctly
-      - make install DESTDIR=/app prefix=/usr
+      # Explicitly set install directories relative to /app
+      - >
+        make install prefix=/app
+        libdir=/app/lib
+        includedir=/app/include
+        pkgconfigdir=/app/lib/pkgconfig
     cleanup:
       - /include
       - /lib/pkgconfig
