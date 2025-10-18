@@ -1,11 +1,19 @@
 --- a/meson.build
 +++ b/meson.build
-@@ -407,7 +407,7 @@ if tic.found()
+@@ -403,13 +403,13 @@ if tic.found()
+     output: 'foot.info.preprocessed',
+     configuration: conf_data,
+   )
++  final_terminfo_install_path = join_paths(meson.build_root(), terminfo_install_location)
+   custom_target(
      'terminfo',
-     output: terminfo_base_name[0],
+-    output: terminfo_base_name[0],
      input: preprocessed,
 -    command: [tic, '-x', '-o', '@OUTDIR@', '-e', '@0@,@0@-direct'.format(terminfo_base_name), '@INPUT@'],
-+    command: [tic, '-x', '-C', '-o', '@OUTDIR@', '-e', '@0@,@0@-direct'.format(terminfo_base_name), '@INPUT@'],
-     install: true,
-     install_dir: terminfo_install_location
+-    install: true,
+-    install_dir: terminfo_install_location
++    command: [tic, '-x', '-C', '-o', final_terminfo_install_path, '-e', '@0@,@0@-direct'.format(terminfo_base_name), '@INPUT@'],
++    output: join_paths(meson.current_build_dir(), 'terminfo_compiled'),
++    install: false,
    )
+endif
