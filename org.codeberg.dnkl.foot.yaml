@@ -54,13 +54,12 @@ modules:
 
   # 2. libutf8proc
   - name: libutf8proc
-    buildsystem: make
-    # Ensure make install uses the correct Flatpak prefix
-    make-install-args:
-      - PREFIX=/app
+    buildsystem: simple
+    build-commands:
+      - make
+      - make install DESTDIR=/app PREFIX=/app
     cleanup:
       - /include
-      # - /lib/cmake  # Removed CMake-specific path
       - /lib/pkgconfig
       - /lib/*.a
       # Keep the .so library needed at runtime by fcft/foot
