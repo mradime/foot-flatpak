@@ -122,31 +122,30 @@ modules:
   - name: foot
     buildsystem: meson
     config-opts:
-      # Disable systemd/logind features that don't work in the sandbox
-      - -Dsystemd-units=disabled
-      - -Dlogind=disabled
-      # Explicitly disable docs and man pages
+      # Explicitly disable features not needed/wanted in Flatpak
       - -Ddocs=disabled
-      - -Dman-pages=disabled
-      # Explicitly enable IME support
-      - -Dime=enabled
+      - -Dtests=false
+      - -Dutmp-backend=none
+      # Explicitly enable desired features (some might be default)
       - -Dthemes=enabled
-    # Cleanup for a minimal package
+      - -Dime=enabled
+      - -Dgrapheme-clustering=enabled
+      - -Dterminfo=enabled
     cleanup:
-      # Standard cleanup
+      # Remove build artifacts and unnecessary installed files
       - /include
       - /lib/pkgconfig
-      - /share/doc
       - /share/pkgconfig
-      - /share/aclocal
-      - /man # Already disabled via meson, but good cleanup
-      - /share/man # Already disabled via meson, but good cleanup
-      - '*.la'
+      - /share/doc/foot # Should be empty due to -Ddocs=disabled, but cleanup anyway
+      - /share/man     # Should be empty due to -Ddocs=disabled, but cleanup anyway
       - '*.a'
-      # Remove shell completion directories
+      - '*.la'
+      # Remove completions
       - /share/bash-completion
+      - /share/fish
       - /share/zsh
-      - /share/fish/vendor_completions.d
+      # Remove systemd files just in case they sneak in
+      - /lib/systemd
     sources:
       - type: git
         url: https://codeberg.org/dnkl/foot.git
