@@ -55,27 +55,25 @@ cleanup:
 modules:
   # 1. Core library dependency for foot/fcft
   - name: tllist
-    x-checker-data:
-      type: git
-      url: https://codeberg.org/dnkl/tllist.git
-      tag-pattern: ^v?(\d+\.\d+\.\d+)$
     sources:
       - type: git
         url: https://codeberg.org/dnkl/tllist.git
-        tag: '1.1.2'
-        commit: 55476a6d63435c2b0c3453b6c7c093c7d66761f0
+        tag: 1.1.0
+        commit: 8dcb0725c73eee9e350f41a921faf0bcd2ab9920
+        x-checker-data:
+          type: git
+          tag-pattern: ^v?(\d+\.\d+\.\d+)$
 
   # 2. Font library dependency for foot
   - name: fcft
-    x-checker-data:
-      type: git
-      url: https://codeberg.org/dnkl/fcft.git
-      tag-pattern: ^v?(\d+\.\d+\.\d+)$
     sources:
       - type: git
         url: https://codeberg.org/dnkl/fcft.git
-        tag: '3.1.8'
-        commit: 11c58c2b74070a24f0c6c49cc8b0b5f54316a308
+        tag: 3.3.2
+        commit: b212e767e031891687bc6f5527ab61dddac6024e
+        x-checker-data:
+          type: git
+          tag-pattern: ^v?(\d+\.\d+\.\d+)$
 
   # 3. The main foot application
   # What does foot's meson.build install?
@@ -100,16 +98,15 @@ modules:
       # Explicitly enable IME support
       - -Dime=enabled
       - -Dthemes=enabled
-    x-checker-data:
-      type: git
-      url: https://codeberg.org/dnkl/foot.git
-      tag-pattern: ^v?(\d+\.\d+\.\d+)$
-      is-main-source: true
     sources:
       - type: git
         url: https://codeberg.org/dnkl/foot.git
-        tag: '1.17.2'
-        commit: c1603957297e64177699709d64f0b0ea3d1c4793
+        tag: 1.17.2
+        commit: b88f0d672f04a835812125ac97ea55240f70de1f
+        x-checker-data:
+          type: git
+          tag-pattern: ^v?(\d+\.\d+\.\d+)$
+          is-main-source: true
 
   # 4. Default config
   - name: foot-config

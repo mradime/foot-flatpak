@@ -34,6 +34,7 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.17.2" date="2024-04-17"/>
   </releases>
   <launchable type="desktop-id">org.codeberg.dnkl.foot.desktop</launchable>
   <url type="homepage">https://codeberg.org/dnkl/foot</url>
