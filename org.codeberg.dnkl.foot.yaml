@@ -37,7 +37,7 @@ finish-args:
 
 # Cleanup for a minimal package
 cleanup:
-# Standard cleanup
+  # Standard cleanup
   - /include
   - /lib/pkgconfig
   - /share/doc
@@ -55,6 +55,14 @@ cleanup:
 modules:
   # 1. Core library dependency for foot/fcft
   - name: tllist
+    buildsystem: meson
+    config-opts:
+      - -Ddocs=disabled
+      - -Dman-pages=disabled
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+      - /share/doc/tllist
     sources:
       - type: git
         url: https://codeberg.org/dnkl/tllist.git
@@ -66,6 +74,24 @@ modules:
 
   # 2. Font library dependency for foot
   - name: fcft
+    buildsystem: meson
+    config-opts:
+      # Enable necessary features explicitly
+      - -Dgrapheme-shaping=enabled
+      - -Drun-shaping=enabled
+      # Configure SVG support using bundled nanosvg
+      - -Dsvg-backend=nanosvg
+      - -Dsystem-nanosvg=false
+      # Disable unnecessary features
+      - -Dexamples=false
+      - -Ddocs=false
+    # Explicitly clean up files installed by fcft that are not needed at runtime.
+    # Note: Does NOT remove the essential libfcft.so library file.
+    cleanup:
+      - /include
+      - /lib/pkgconfig
+      - /share/pkgconfig
+      - /share/doc/fcft
     sources:
       - type: git
         url: https://codeberg.org/dnkl/fcft.git
@@ -98,6 +124,22 @@ modules:
       # Explicitly enable IME support
       - -Dime=enabled
       - -Dthemes=enabled
+    # Cleanup for a minimal package
+    cleanup:
+      # Standard cleanup
+      - /include
+      - /lib/pkgconfig
+      - /share/doc
+      - /share/pkgconfig
+      - /share/aclocal
+      - /man # Already disabled via meson, but good cleanup
+      - /share/man # Already disabled via meson, but good cleanup
+      - '*.la'
+      - '*.a'
+      # Remove shell completion directories
+      - /share/bash-completion
+      - /share/zsh
+      - /share/fish/vendor_completions.d
     sources:
       - type: git
         url: https://codeberg.org/dnkl/foot.git
