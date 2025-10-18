@@ -100,6 +100,14 @@ jobs:
           git -C flatpak lfs install
           git -C flatpak lfs track "**/objects/**"
 
+      - name: "Update Flatpak Tools"
+        run: |
+          flatpak update --appstream -y
+          flatpak install flathub org.flatpak.Builder -y
+          # Optional: Verify version (should be >= 1.12.0)
+          flatpak --version
+          flatpak-builder --version
+
       - name: "Build Flatpak"
         env:
           GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
