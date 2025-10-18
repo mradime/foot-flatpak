@@ -54,14 +54,14 @@ modules:
 
   # 2. libutf8proc
   - name: libutf8proc
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     cleanup:
       - /include
       - /lib/cmake
       - /lib/pkgconfig
       - /lib/*.a
-      # - /lib/*.so # Remove shared library if only static is needed by fcft/foot,
-                   # but often safer to keep the .so if unsure. Let's keep it for now.
+      # Keep the .so library needed at runtime by fcft/foot
+      # - /lib/*.so
       - /share/doc
     sources:
       - type: git
