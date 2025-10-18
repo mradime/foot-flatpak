@@ -1,0 +1,124 @@
+app-id: org.codeberg.dnkl.foot
+runtime: org.freedesktop.Platform
+runtime-version: '25.08'
+sdk: org.freedesktop.Sdk
+command: foot
+
+finish-args:
+  - --socket=wayland
+  - --unshare=network
+  # Pseudo-Terminal (PTY) & Process Spawning
+  # --device=all is required for /dev/pts (PTY) access.
+  # --share=ipc is required for PTY signaling and communication.
+  - --share=ipc
+  - --device=all
+  # Server/Client Communication Socket
+  # Needed for footd to create its socket in /run/user/<uid>
+  # and for footclient to connect to it.
+  - --filesystem=xdg-run
+  # The "Escape Hatch" to the Host Shell
+  # Allows foot to call flatpak-spawn, which pops a portal dialog
+  # asking the user for permission to run a host command.
+  - --talk-name=org.freedesktop.Flatpak
+  # Self-Contained Configuration & Data
+  # :create allows it to make its own config dir.
+  # :ro gives read-only access to user-installed fonts.
+  - --filesystem=xdg-config/foot:create
+  - --filesystem=xdg-data/fonts:ro
+  # IME Support
+  - --talk-name=org.freedesktop.portal.Fcitx5
+  # Environment: Add Flatpak's default config dir to the search path
+  # Foot checks $XDG_CONFIG_HOME first (user config), then paths in $XDG_CONFIG_DIRS.
+  # This makes it use /app/etc/xdg as a fallback if no user config exists.
+  - --env=XDG_CONFIG_DIRS=/app/etc/xdg:${XDG_CONFIG_DIRS:-/etc/xdg}
+  # Sound
+  - --filesystem=xdg-run/pipewire-0
+  - --socket=pulseaudio
+
+# Cleanup for a minimal package
+cleanup:
+# Standard cleanup
+  - /include
+  - /lib/pkgconfig
+  - /share/doc
+  - /share/pkgconfig
+  - /share/aclocal
+  - /man # Already disabled via meson, but good cleanup
+  - /share/man # Already disabled via meson, but good cleanup
+  - '*.la'
+  - '*.a'
+  # Remove shell completion directories
+  - /share/bash-completion
+  - /share/zsh
+  - /share/fish/vendor_completions.d
+
+modules:
+  # 1. Core library dependency for foot/fcft
+  - name: tllist
+    x-checker-data:
+      type: git
+      url: https://codeberg.org/dnkl/tllist.git
+      tag-pattern: ^v?(\d+\.\d+\.\d+)$
+    sources:
+      - type: git
+        url: https://codeberg.org/dnkl/tllist.git
+        tag: '1.1.2'
+        commit: 55476a6d63435c2b0c3453b6c7c093c7d66761f0
+
+  # 2. Font library dependency for foot
+  - name: fcft
+    x-checker-data:
+      type: git
+      url: https://codeberg.org/dnkl/fcft.git
+      tag-pattern: ^v?(\d+\.\d+\.\d+)$
+    sources:
+      - type: git
+        url: https://codeberg.org/dnkl/fcft.git
+        tag: '3.1.8'
+        commit: 11c58c2b74070a24f0c6c49cc8b0b5f54316a308
+
+  # 3. The main foot application
+  # What does foot's meson.build install?
+  # 1. Executables -> Needed
+  # 2. Desktop integration files (desktop files & icons) -> Needed
+  # 3. Systemd User Units -> Cannot function properly under the sandbox
+  # 4. Configuration Files -> Needed
+  # 5. Documentation files -> Not needed
+  # 6. Themes -> Enabled
+  # 7. Terminfo Files -> Needed
+  # 8. Shell Completions -> Not needed
+  # 9. Utility Scripts/Executables -> Needed
+  - name: foot
+    buildsystem: meson
+    config-opts:
+      # Disable systemd/logind features that don't work in the sandbox
+      - -Dsystemd-units=disabled
+      - -Dlogind=disabled
+      # Explicitly disable docs and man pages
+      - -Ddocs=disabled
+      - -Dman-pages=disabled
+      # Explicitly enable IME support
+      - -Dime=enabled
+      - -Dthemes=enabled
+    x-checker-data:
+      type: git
+      url: https://codeberg.org/dnkl/foot.git
+      tag-pattern: ^v?(\d+\.\d+\.\d+)$
+      is-main-source: true
+    sources:
+      - type: git
+        url: https://codeberg.org/dnkl/foot.git
+        tag: '1.17.2'
+        commit: c1603957297e64177699709d64f0b0ea3d1c4793
+
+  # 4. Default config
+  - name: foot-config
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 foot.ini /app/etc/xdg/foot/foot.ini
+    sources:
+      - type: file
+        path: foot.ini
+        contents: |
+          [main]
+          shell=flatpak-spawn --host sh -c 'exec ${SHELL:-/bin/sh}'
