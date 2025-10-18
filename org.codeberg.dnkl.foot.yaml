@@ -155,6 +155,8 @@ modules:
           type: git
           tag-pattern: ^v?(\d+\.\d+\.\d+)$
           is-main-source: true
+      - type: patch
+        path: foot-fix-tic-command.patch
 
   # 5. Default config
   - name: foot-config

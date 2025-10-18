@@ -1,0 +1,11 @@
+--- a/meson.build
++++ b/meson.build
+@@ -407,7 +407,7 @@ if tic.found()
+     'terminfo',
+     output: terminfo_base_name[0],
+     input: preprocessed,
+-    command: [tic, '-x', '-o', '@OUTDIR@', '-e', '@0@,@0@-direct'.format(terminfo_base_name), '@INPUT@'],
++    command: [tic, '-x', '-C', '-o', '@OUTDIR@', '-e', '@0@,@0@-direct'.format(terminfo_base_name), '@INPUT@'],
+     install: true,
+     install_dir: terminfo_install_location
+   )
