@@ -16,4 +16,5 @@
 +    output: join_paths(meson.current_build_dir(), 'terminfo_compiled'),
 +    install: false,
    )
-endif
+ endif
+ 
