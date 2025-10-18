@@ -13,7 +13,7 @@
 -    install: true,
 -    install_dir: terminfo_install_location
 +    command: [tic, '-x', '-C', '-o', final_terminfo_install_path, '-e', '@0@,@0@-direct'.format(terminfo_base_name), '@INPUT@'],
-+    output: join_paths(meson.current_build_dir(), 'terminfo_compiled'),
++    output: 'terminfo_compiled.stamp',
 +    install: false,
    )
  endif
