@@ -116,6 +116,3 @@ modules:
     sources:
       - type: file
         path: foot.ini
-        contents: |
-          [main]
-          shell=flatpak-spawn --host sh -c 'exec ${SHELL:-/bin/sh}'
